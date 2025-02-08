@@ -49,7 +49,7 @@ const Watch = (props) => {
             <div className="w-full bg-cover bg-no-repeat bg-center text-white" style={{backgroundImage: `url(https://image.tmdb.org/t/p/original/${result.backdrop_path})`}}>
                 <div className="w-full bg-[rgba(0,0,0,0.4)]">
                     <div className="container max-w-7xl mx-auto  p-10">
-                        <iframe allowFullScreen ref = {iframeRef} onLoad={e => handleIframeLoad(e)} className="w-full" style={{aspectRatio: "16/9"}} src={ `https://vidsrc.me/v2/embed/${type}/${id}`} referrerpolicy="origin"></iframe>  
+                        <iframe allowFullScreen ref = {iframeRef} onLoad={e => handleIframeLoad(e)} className="w-full" style={{aspectRatio: "16/9"}} src={ `https://vidsrc.cc/v3/embed/${type}/${id}`}></iframe>  
                     </div>
                 </div>
             </div>
