@@ -39,10 +39,10 @@ const Watch = (props) => {
       setGenres(response.genres?.map(genre => genre.name) || []);
     })
     .catch(err => console.log("Fetch error:", err.message));
-  }, [type, id, season, episode]); // Ensures effect runs when params change
+  }, [type, id, season, episode]);
 
-  // Validate embed URL format
-  const embedUrl = type && id ? `https://embed.7xtream.com/4k/${type}/${id}${type === "tv" && season && episode ? `/${season}/${episode}` : ""}` : "";
+  // Generate embed URL dynamically
+  const embedUrl = `https://embed.7xtream.com/4k/${type}/${id}${type === "tv" ? `/${season}/${episode}` : ""}`;
   console.log("Generated Embed URL:", embedUrl);
 
   const handleIframeLoad = (e) => {
