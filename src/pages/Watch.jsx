@@ -8,13 +8,16 @@ const Watch = (props) => {
   const [genres, setGenres] = useState([]);
   const iframeRef = useRef();
 
-  // Construct fetch URL dynamically for movies and TV shows
+  console.log("Received Params:", { type, id, season, episode });
+
   useEffect(() => {
     let url = `${props.tmdb.baseUrl}/${type}/${id}`;
-
+    
     if (type === "tv" && season && episode) {
       url += `/season/${season}/episode/${episode}`;
     }
+
+    console.log("Fetch URL:", url);
 
     fetch(url, {
       headers: {
@@ -33,13 +36,13 @@ const Watch = (props) => {
     .catch(err => console.log("Fetch error:", err.message));
   }, [type, id, season, episode]);
 
-  // Generate iframe source dynamically
+  // Generate embed URL dynamically
   const embedUrl = `https://embed.7xtream.com/4k/${type}/${id}${type === "tv" ? `/${season}/${episode}` : ""}`;
+  console.log("Generated Embed URL:", embedUrl);
 
-  // Debugging: Log iframe URL to ensure correctness
-  console.log("Embed URL:", embedUrl);
+  // Hardcoded Test URL (Replace with embedUrl once verified)
+  const testEmbedUrl = "https://embed.7xtream.com/4k/movie/123";
 
-  // Handle iframe load event
   const handleIframeLoad = (e) => {
     console.log("Iframe loaded:", e.target);
   };
@@ -56,7 +59,7 @@ const Watch = (props) => {
               onLoad={handleIframeLoad}
               className="w-full"
               style={{ aspectRatio: "16/9" }}
-              src={embedUrl}>
+              src={testEmbedUrl /* Replace with embedUrl once tested */ }>
             </iframe>
           </div>
         </div>
