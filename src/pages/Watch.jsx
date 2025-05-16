@@ -12,7 +12,7 @@ const Watch = (props) => {
 
   useEffect(() => {
     let url = `${props.tmdb.baseUrl}/${type}/${id}`;
-    
+
     if (type === "tv" && season && episode) {
       url += `/season/${season}/episode/${episode}`;
     }
@@ -34,14 +34,11 @@ const Watch = (props) => {
       setGenres(response.genres?.map(genre => genre.name) || []);
     })
     .catch(err => console.log("Fetch error:", err.message));
-  }, [type, id, season, episode]);
+  }, [type, id, season, episode]); // Ensures effect runs when params change
 
   // Generate embed URL dynamically
   const embedUrl = `https://embed.7xtream.com/4k/${type}/${id}${type === "tv" ? `/${season}/${episode}` : ""}`;
   console.log("Generated Embed URL:", embedUrl);
-
-  // Hardcoded Test URL (Replace with embedUrl once verified)
-  const testEmbedUrl = "https://embed.7xtream.com/4k/movie/123";
 
   const handleIframeLoad = (e) => {
     console.log("Iframe loaded:", e.target);
@@ -59,7 +56,7 @@ const Watch = (props) => {
               onLoad={handleIframeLoad}
               className="w-full"
               style={{ aspectRatio: "16/9" }}
-              src={testEmbedUrl /* Replace with embedUrl once tested */ }>
+              src={embedUrl}>
             </iframe>
           </div>
         </div>
