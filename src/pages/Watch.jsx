@@ -11,6 +11,11 @@ const Watch = (props) => {
   console.log("Received Params:", { type, id, season, episode });
 
   useEffect(() => {
+    if (!type || !id) {
+      console.error("Missing required parameters:", { type, id });
+      return;
+    }
+
     let url = `${props.tmdb.baseUrl}/${type}/${id}`;
 
     if (type === "tv" && season && episode) {
@@ -36,8 +41,8 @@ const Watch = (props) => {
     .catch(err => console.log("Fetch error:", err.message));
   }, [type, id, season, episode]); // Ensures effect runs when params change
 
-  // Generate embed URL dynamically
-  const embedUrl = `https://embed.7xtream.com/4k/${type}/${id}${type === "tv" ? `/${season}/${episode}` : ""}`;
+  // Validate embed URL format
+  const embedUrl = type && id ? `https://embed.7xtream.com/4k/${type}/${id}${type === "tv" && season && episode ? `/${season}/${episode}` : ""}` : "";
   console.log("Generated Embed URL:", embedUrl);
 
   const handleIframeLoad = (e) => {
@@ -50,14 +55,18 @@ const Watch = (props) => {
       <div className="w-full bg-cover bg-no-repeat bg-center text-white" style={{ backgroundImage: `url(https://image.tmdb.org/t/p/original/${result.backdrop_path})` }}>
         <div className="w-full bg-[rgba(0,0,0,0.4)]">
           <div className="container max-w-7xl mx-auto p-10">
-            <iframe
-              allowFullScreen
-              ref={iframeRef}
-              onLoad={handleIframeLoad}
-              className="w-full"
-              style={{ aspectRatio: "16/9" }}
-              src={embedUrl}>
-            </iframe>
+            {embedUrl ? (
+              <iframe
+                allowFullScreen
+                ref={iframeRef}
+                onLoad={handleIframeLoad}
+                className="w-full"
+                style={{ aspectRatio: "16/9" }}
+                src={embedUrl}>
+              </iframe>
+            ) : (
+              <p className="text-red-500 text-center">Invalid URL, check console logs.</p>
+            )}
           </div>
         </div>
       </div>
