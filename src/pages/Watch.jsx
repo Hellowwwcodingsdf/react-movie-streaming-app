@@ -8,11 +8,11 @@ const Watch = (props) => {
   const [genres, setGenres] = useState([]);
   const iframeRef = useRef();
 
-  // Fetch details dynamically based on type
+  // Construct fetch URL dynamically for movies and TV shows
   useEffect(() => {
     let url = `${props.tmdb.baseUrl}/${type}/${id}`;
 
-    if (type === "tv") {
+    if (type === "tv" && season && episode) {
       url += `/season/${season}/episode/${episode}`;
     }
 
@@ -22,15 +22,24 @@ const Watch = (props) => {
         "Accept": "application/json",
       }
     })
-    .then(response => response.json())
+    .then(response => {
+      if (!response.ok) throw new Error("Failed to fetch details");
+      return response.json();
+    })
     .then(response => {
       setResult(response);
       setGenres(response.genres?.map(genre => genre.name) || []);
     })
-    .catch(err => console.log(err));
+    .catch(err => console.log("Fetch error:", err.message));
   }, [type, id, season, episode]);
 
-  // Handle iframe load
+  // Generate iframe source dynamically
+  const embedUrl = `https://embed.7xtream.com/4k/${type}/${id}${type === "tv" ? `/${season}/${episode}` : ""}`;
+
+  // Debugging: Log iframe URL to ensure correctness
+  console.log("Embed URL:", embedUrl);
+
+  // Handle iframe load event
   const handleIframeLoad = (e) => {
     console.log("Iframe loaded:", e.target);
   };
@@ -47,7 +56,7 @@ const Watch = (props) => {
               onLoad={handleIframeLoad}
               className="w-full"
               style={{ aspectRatio: "16/9" }}
-              src={`https://embed.7xtream.com/4k/${type}/${id}${type === "tv" ? `/${season}/${episode}` : ""}`}>
+              src={embedUrl}>
             </iframe>
           </div>
         </div>
@@ -83,4 +92,3 @@ const Watch = (props) => {
 };
 
 export default Watch;
-
